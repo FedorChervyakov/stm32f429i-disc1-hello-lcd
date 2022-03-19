@@ -6,10 +6,16 @@ name = "stm32f429i-disc1-hello-lcd"
 version = "0.1.0"
 
 [dependencies]
+embedded-hal = "0.2"
+nb = "1"
 cortex-m = "0.7.0"
 cortex-m-rt = "0.7"
 panic-halt = "0.2.0"
 rtt-target = { version = "0.3.0", features = ["cortex-m"] }
+
+[dependencies.stm32f4xx-hal]
+version = "0.12.0"
+features = ["stm32f429", "rt"]
 
 # Uncomment for the panic example.
 # panic-itm = "0.4.1"
