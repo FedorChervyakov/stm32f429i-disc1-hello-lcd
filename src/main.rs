@@ -9,10 +9,38 @@ use panic_halt as _; // you can put a breakpoint on `rust_begin_unwind` to catch
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
+use stm32f4xx_hal as hal;
+
+use rtt_target::{rtt_init_print, rprintln};
+
+use crate::hal::{
+    gpio::Speed,
+    pac::{CorePeripherals, Peripherals},
+    prelude::*,
+};
 
 #[entry]
 fn main() -> ! {
-    asm::nop(); // To not have main optimize to abort in release mode, remove when you add code
+    rtt_init_print!();
+
+    let cp = cortex_m::Peripherals::take().unwrap();
+    let hp = hal::pac::Peripherals::take().unwrap();
+
+    cortex_m::interrupt::free(|_cs| {
+        // Split all the GPIO blocks we need
+        let gpioa = hp.GPIOA.split();
+        let gpiob = hp.GPIOB.split();
+        let gpioc = hp.GPIOC.split();
+        let gpiod = hp.GPIOD.split();
+        let gpioe = hp.GPIOE.split();
+        let gpiof = hp.GPIOF.split();
+        let gpiog = hp.GPIOG.split();
+
+        let rcc = hp.RCC.constrain();
+        let clocks = rcc.cfgr.sysclk(180.MHz()).freeze();
+
+    });
+
 
     loop {
         // your code goes here
